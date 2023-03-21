@@ -9,9 +9,9 @@
 
 #include "socket.h"
 
-SocketClient::SocketClient(std::string host, std::string port): address(nullptr, &freeaddrinfo) {
+SocketClient::SocketClient(std::string host, uint16_t port): address(nullptr, &freeaddrinfo), svport(port) {
 	addrinfo* tmp;
-	int addr_err = getaddrinfo(host.c_str(), port.c_str(), 0, &tmp);
+	int addr_err = getaddrinfo(host.c_str(), std::to_string(port).c_str(), 0, &tmp);
 	this->address.reset(tmp);
 	if (addr_err != 0) {
 		throw std::runtime_error("Failed to get address info.");
@@ -25,6 +25,21 @@ SocketClient::SocketClient(std::string host, std::string port): address(nullptr,
 
 SocketClient::~SocketClient() {
 	close(this->sockfd);
+}
+
+uint16_t SocketClient::GetBoundPort() {
+	sockaddr_in socket_address;
+	int addr_size = sizeof(sockaddr_in);
+
+	if (getsockname(this->sockfd, (sockaddr*)&socket_address, (socklen_t*)&addr_size) < 0) {
+		throw std::runtime_error("Failed to fetch socket info.");
+	}
+
+	return (int)socket_address.sin_port;
+}
+
+uint16_t SocketClient::GetServerPort() {
+	return this->svport;
 }
 
 void SocketClient::Connect() {
@@ -56,3 +71,4 @@ std::string SocketClient::Read(int bytes, int timeout) {
 
 	return std::string(buffer.get());
 }
+

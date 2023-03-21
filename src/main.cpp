@@ -1,14 +1,13 @@
+#include <cstdio>
 #include <iostream>
-#include <string>
 
 #include "socket.h"
 
 int main() {
-	SocketClient mySocket("localhost", "8001");
-
+	SocketClient mySocket("google.com", 443);
 	mySocket.Connect();
 
-	mySocket.Write("I'll kill you.");
+	mySocket.Write("Please be patient, I have C++ syndrome.");
 
 	return EXIT_SUCCESS;
 }
