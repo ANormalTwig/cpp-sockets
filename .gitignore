@@ -1,0 +1,9 @@
+# Temporary directories
+build/
+.clangd/
+.cache/
+
+# IDEs
+.vim/
+.vs/
+.vscode/
