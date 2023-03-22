@@ -9,6 +9,8 @@ int main() {
 
 	mySocket.Write("Please be patient, I have C++ syndrome.");
 
+	std::cout << mySocket.Read(1024, -1) << std::endl;
+
 	return EXIT_SUCCESS;
 }
 

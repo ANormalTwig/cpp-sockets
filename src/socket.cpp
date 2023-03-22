@@ -21,6 +21,9 @@ SocketClient::SocketClient(std::string host, uint16_t port): address(nullptr, &f
 	if (sockfd < 0) {
 		throw std::runtime_error("Failed to create socket.");
 	}
+
+	this->pollinfo.fd = this->sockfd;
+	this->pollinfo.events |= POLLIN;
 }
 
 SocketClient::~SocketClient() {
@@ -29,13 +32,13 @@ SocketClient::~SocketClient() {
 
 uint16_t SocketClient::GetBoundPort() {
 	sockaddr_in socket_address;
-	int addr_size = sizeof(sockaddr_in);
+	static const int addr_size = sizeof(sockaddr_in);
 
 	if (getsockname(this->sockfd, (sockaddr*)&socket_address, (socklen_t*)&addr_size) < 0) {
 		throw std::runtime_error("Failed to fetch socket info.");
 	}
 
-	return (int)socket_address.sin_port;
+	return socket_address.sin_port;
 }
 
 uint16_t SocketClient::GetServerPort() {
@@ -57,11 +60,7 @@ void SocketClient::Write(std::string message) {
 }
 
 std::string SocketClient::Read(int bytes, int timeout) {
-	pollfd p;
-	p.fd = this->sockfd;
-	p.events |= POLLIN;
-
-	int poll_result = poll(&p, nfds_t(1), timeout);
+	int poll_result = poll(&this->pollinfo, nfds_t(1), timeout);
 	if (poll_result == 0) {
 		return std::string();
 	}

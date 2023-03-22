@@ -5,10 +5,12 @@
 #include <string>
 
 #include <netdb.h>
+#include <sys/poll.h>
 
 class SocketClient {
 	int sockfd;
 	uint16_t svport;
+	pollfd pollinfo;
 
 	std::unique_ptr<addrinfo, decltype(&freeaddrinfo)> address;
 
