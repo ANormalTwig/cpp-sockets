@@ -98,10 +98,10 @@ std::string Socket::Client::Read(int bytes, int timeout) {
 		return std::string();
 	}
 
-	std::unique_ptr<char> buffer(new char[bytes]);
-	read(this->sockfd, buffer.get(), bytes);
+	char buffer[bytes];
+	read(this->sockfd, &buffer, bytes);
 
-	return std::string(buffer.get());
+	return std::string(buffer);
 }
 
 // TCP Server

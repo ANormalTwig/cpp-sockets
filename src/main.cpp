@@ -16,9 +16,13 @@ int main() {
 
 	std::shared_ptr<Socket::Client> client(myServer.Accept());
 
-	myClient.Write("The J");
+	myClient.Write("The A");
 
-	print(client->Read(1024));
+	std::string data(client->Read());
+	print(data);
+	client->Write("The B");
+
+	print(myClient.Read());
 
 	return EXIT_SUCCESS;
 }
