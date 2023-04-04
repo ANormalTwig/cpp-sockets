@@ -11,11 +11,14 @@ int main() {
 	Socket::Server myServer("127.0.0.1", SERVER_PORT);
 	myServer.Listen(1024);
 
-	std::vector<std::shared_ptr<Socket::Client>> clients;
+	Socket::Client myClient("127.0.0.1", SERVER_PORT);
+	myClient.Connect();
 
-	clients.push_back(myServer.Accept());
+	std::shared_ptr<Socket::Client> client(myServer.Accept());
 
-	print(clients.back()->Read(1024));
+	myClient.Write("The J");
+
+	print(client->Read(1024));
 
 	return EXIT_SUCCESS;
 }
