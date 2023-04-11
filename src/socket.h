@@ -12,6 +12,7 @@ namespace Socket {
 class TCPBase {
 protected:
 	int sockfd;
+	pollfd readpoll;
 
 	sockaddr address;
 	socklen_t address_length;
@@ -27,7 +28,6 @@ public:
 struct Client: TCPBase {
 protected:
 	uint16_t svport;
-	pollfd read_pollfd;
 
 public:
 	Client(std::string host, uint16_t port);
@@ -42,12 +42,10 @@ public:
 };
 
 struct Server: TCPBase {
-private:
-	pollfd accept_pollfd;
 public:
 	Server(std::string address, uint16_t port);
 
-	void Listen(int queue_max);
+	void Listen(int queue_max = 512);
 	std::shared_ptr<Client> Accept(int timeout = -1);
 };
 

@@ -9,19 +9,17 @@
 
 int main() {
 	Socket::Server myServer("127.0.0.1", SERVER_PORT);
-	myServer.Listen(1024);
+	myServer.Listen();
 
 	Socket::Client myClient("127.0.0.1", SERVER_PORT);
 	myClient.Connect();
 
 	std::shared_ptr<Socket::Client> client(myServer.Accept());
 
-	myClient.Write("The A");
+	myClient.Write("Hello, Server!");
+	print(client->Read());
 
-	std::string data(client->Read());
-	print(data);
-	client->Write("The B");
-
+	client->Write("Hello, Client!");
 	print(myClient.Read());
 
 	return EXIT_SUCCESS;
